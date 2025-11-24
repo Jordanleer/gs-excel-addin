@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>G&S Addin - Web Application</title>
+    <link rel="stylesheet" href="5fad05e831c4caeef552.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Topbar -->
+        <div class="topbar">
+            <button class="back" onclick="goBack()" title="Go Back">
+                <svg viewBox="0 0 20 20">
+                    <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"/>
+                </svg>
+            </button>
+            <h2>G&S Performance Analysis</h2>
+        </div>
+
+        <!-- Main Container -->
+        <div class="container">
+            <!-- Main Card -->
+            <div class="card">
+                <h3>Performance Analysis Tool</h3>
+                <p class="muted">
+                    Analyze your G&S data files and generate performance reports.
+                    <b>Enter sheet names</b> and click analyze to process each file.
+                </p>
+
+                <hr>
+
+                <!-- Button Zone - File List -->
+                <div id="btnZone">
+                    <!-- Sample Row 1 -->
+                    <div class="row">
+                        <div class="row-details">
+                            <div class="name">Q4 Performance Report</div>
+                            <div class="path">/reports/2024/q4_performance.xlsx</div>
+                        </div>
+                        <div class="row-actions">
+                            <input type="text" placeholder="Sheet name..." value="Sheet1" id="sheet-1">
+                            <button class="btn primary" onclick="analyzeSheet('sheet-1', 'Q4 Performance Report')">Analyze</button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Row 2 -->
+                    <div class="row">
+                        <div class="row-details">
+                            <div class="name">Financial Metrics Dashboard</div>
+                            <div class="path">/data/financial/metrics_2024.xlsx</div>
+                        </div>
+                        <div class="row-actions">
+                            <input type="text" placeholder="Sheet name..." value="Dashboard" id="sheet-2">
+                            <button class="btn primary" onclick="analyzeSheet('sheet-2', 'Financial Metrics Dashboard')">Analyze</button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Row 3 -->
+                    <div class="row">
+                        <div class="row-details">
+                            <div class="name">Operations Data</div>
+                            <div class="path">/operations/ops_data_jan.xlsx</div>
+                        </div>
+                        <div class="row-actions">
+                            <input type="text" placeholder="Sheet name..." value="Operations" id="sheet-3">
+                            <button class="btn primary" onclick="analyzeSheet('sheet-3', 'Operations Data')">Analyze</button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap;">
+                    <button class="btn secondary" onclick="addNewFile()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add File
+                    </button>
+                    <button class="btn primary" onclick="analyzeAll()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        Analyze All
+                    </button>
+                </div>
+
+                <!-- Status Display -->
+                <div id="status"></div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="card" style="margin-top: 20px;">
+                <h3>About G&S Performance Analysis</h3>
+                <p class="muted">
+                    This tool provides comprehensive analysis of your G&S data files.
+                    It processes Excel workbooks and generates detailed performance metrics,
+                    helping you make data-driven decisions.
+                </p>
+                <p class="muted" style="margin-top: 12px;">
+                    <b>Features:</b> Multi-sheet analysis, data validation, performance scoring,
+                    automated reporting, and export capabilities.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Go back function
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                alert('No previous page to navigate to.');
+            }
+        }
+
+        // Analyze individual sheet
+        function analyzeSheet(inputId, fileName) {
+            const input = document.getElementById(inputId);
+            const sheetName = input.value || 'Sheet1';
+            const statusDiv = document.getElementById('status');
+            const button = event.target;
+
+            // Disable button
+            button.disabled = true;
+            button.innerHTML = '<span class="loading">⟳</span> Analyzing...';
+
+            // Show status
+            statusDiv.textContent = `Analyzing "${fileName}" (Sheet: ${sheetName})...\n\nProcessing data, please wait...`;
+            statusDiv.style.display = 'block';
+
+            // Simulate analysis
+            setTimeout(() => {
+                statusDiv.textContent = `✓ Analysis Complete: ${fileName}\n\n` +
+                    `Sheet: ${sheetName}\n` +
+                    `Rows Processed: ${Math.floor(Math.random() * 5000) + 500}\n` +
+                    `Columns: ${Math.floor(Math.random() * 20) + 5}\n` +
+                    `Performance Score: ${Math.floor(Math.random() * 30) + 70}/100\n` +
+                    `Status: Ready for review`;
+                statusDiv.classList.add('text-success');
+
+                // Re-enable button
+                button.disabled = false;
+                button.innerHTML = 'Analyze';
+            }, 2000);
+        }
+
+        // Analyze all sheets
+        function analyzeAll() {
+            const statusDiv = document.getElementById('status');
+            const buttons = document.querySelectorAll('.btn.primary');
+
+            // Disable all analyze buttons
+            buttons.forEach(btn => {
+                if (btn.textContent.includes('Analyze') && !btn.textContent.includes('All')) {
+                    btn.disabled = true;
+                }
+            });
+
+            statusDiv.textContent = 'Running batch analysis on all files...\n\nThis may take a few moments.';
+            statusDiv.style.display = 'block';
+            statusDiv.classList.remove('text-success');
+
+            setTimeout(() => {
+                const totalRows = Math.floor(Math.random() * 10000) + 5000;
+                const avgScore = Math.floor(Math.random() * 15) + 80;
+
+                statusDiv.textContent = `✓ Batch Analysis Complete\n\n` +
+                    `Files Processed: 3\n` +
+                    `Total Rows: ${totalRows.toLocaleString()}\n` +
+                    `Average Performance: ${avgScore}/100\n` +
+                    `Status: All analyses complete`;
+                statusDiv.classList.add('text-success');
+
+                // Re-enable buttons
+                buttons.forEach(btn => {
+                    if (btn.textContent === '') btn.disabled = false;
+                });
+            }, 3500);
+        }
+
+        // Add new file row
+        function addNewFile() {
+            const btnZone = document.getElementById('btnZone');
+            const fileCount = btnZone.querySelectorAll('.row').length + 1;
+            const newId = `sheet-${fileCount}`;
+
+            const newRow = document.createElement('div');
+            newRow.className = 'row';
+            newRow.innerHTML = `
+                <div class="row-details">
+                    <div class="name">New File ${fileCount}</div>
+                    <div class="path">/data/new_file_${fileCount}.xlsx</div>
+                </div>
+                <div class="row-actions">
+                    <input type="text" placeholder="Sheet name..." value="Sheet1" id="${newId}">
+                    <button class="btn primary" onclick="analyzeSheet('${newId}', 'New File ${fileCount}')">Analyze</button>
+                </div>
+            `;
+
+            btnZone.appendChild(newRow);
+
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = `✓ New file added\n\nConfigure the sheet name and click Analyze when ready.`;
+            statusDiv.style.display = 'block';
+            statusDiv.classList.remove('text-success');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('G&S Performance Analysis Web App loaded');
+        });
+    </script>
+</body>
+</html>
