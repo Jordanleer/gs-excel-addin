@@ -1,1 +1,23 @@
-<!doctype html><html><head><meta charset="utf-8"/><title>G&S Addin</title><script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="stylesheet" href="5fad05e831c4caeef552.css"/><script defer="defer" src="polyfill.js"></script><script defer="defer" src="taskpane.js"></script></head><body><div id="app-container"></div></body></html>
+<!doctype html><html><head><meta charset="utf-8"/><title>G&S Addin</title><script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="stylesheet" href="5fad05e831c4caeef552.css"/><script defer="defer" src="polyfill.js"></script><script defer="defer" src="taskpane.js"></script></head><body><div id="app-container"></div><script>
+// Add webapp link to topbar after page loads
+(function() {
+  function addWebAppLink() {
+    const topbar = document.querySelector('.topbar');
+    if (topbar) {
+      const link = document.createElement('a');
+      link.href = 'webapp.html';
+      link.target = '_blank';
+      link.className = 'webapp-link';
+      link.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg> Open Web App';
+      topbar.appendChild(link);
+    } else {
+      setTimeout(addWebAppLink, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addWebAppLink);
+  } else {
+    addWebAppLink();
+  }
+})();
+</script></body></html>
